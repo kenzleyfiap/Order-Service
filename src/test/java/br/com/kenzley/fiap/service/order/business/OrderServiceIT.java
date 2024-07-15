@@ -3,7 +3,7 @@ package br.com.kenzley.fiap.service.order.business;
 import br.com.kenzley.fiap.service.order.api.converter.OrderMapper;
 import br.com.kenzley.fiap.service.order.api.response.OrderResponseDTO;
 import br.com.kenzley.fiap.service.order.client.product.ProductClient;
-import br.com.kenzley.fiap.service.order.infrastructure.exceptions.OrderNotFoundException;
+import br.com.kenzley.fiap.service.order.infrastructure.exceptions.NotFoundException;
 import br.com.kenzley.fiap.service.order.infrastructure.repository.OrderRepository;
 import br.com.kenzley.fiap.service.order.utils.OrderHelper;
 import io.qameta.allure.Severity;
@@ -48,7 +48,7 @@ class OrderServiceIT {
     }
 
     @Test
-    void mustAllowFindOrder() throws OrderNotFoundException {
+    void mustAllowFindOrder() throws NotFoundException {
 
         // Act
         var orderReceived = orderService.getOrderById(1L);
@@ -62,7 +62,7 @@ class OrderServiceIT {
     @Test
     void mustGenerateExceptionWhenIdDoesNotExist() {
         assertThatThrownBy(() -> orderService.getOrderById(54L))
-                .isInstanceOf(OrderNotFoundException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessage("Order not found");
     }
 

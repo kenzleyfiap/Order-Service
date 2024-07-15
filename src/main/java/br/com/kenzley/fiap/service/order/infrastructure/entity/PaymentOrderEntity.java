@@ -1,8 +1,6 @@
 package br.com.kenzley.fiap.service.order.infrastructure.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -17,6 +15,7 @@ import java.math.BigDecimal;
 public class PaymentOrderEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String status;
     private BigDecimal amount;

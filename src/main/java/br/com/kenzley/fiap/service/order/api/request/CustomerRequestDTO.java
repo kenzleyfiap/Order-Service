@@ -11,4 +11,5 @@ import lombok.*;
 public class CustomerRequestDTO {
     private String name;
     private String cpf;
+    private String email;
 }

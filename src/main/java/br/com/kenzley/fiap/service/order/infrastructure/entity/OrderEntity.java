@@ -1,5 +1,6 @@
 package br.com.kenzley.fiap.service.order.infrastructure.entity;
 
+import br.com.kenzley.fiap.service.order.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,6 +37,9 @@ public class OrderEntity {
     private PaymentOrderEntity payment;
 
     private BigDecimal totalAmount;
+
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
 
 
 }

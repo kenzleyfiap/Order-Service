@@ -4,6 +4,7 @@ import br.com.kenzley.fiap.service.order.api.request.CustomerRequestDTO;
 import br.com.kenzley.fiap.service.order.api.request.OrderRequestDTO;
 import br.com.kenzley.fiap.service.order.api.response.OrderResponseDTO;
 import br.com.kenzley.fiap.service.order.client.product.CategoryDTO;
+import br.com.kenzley.fiap.service.order.client.product.OrderProductResponseDTO;
 import br.com.kenzley.fiap.service.order.client.product.Product;
 import br.com.kenzley.fiap.service.order.infrastructure.entity.CustomerEntity;
 import br.com.kenzley.fiap.service.order.infrastructure.entity.OrderEntity;
@@ -77,6 +78,17 @@ public class OrderHelper {
                 .dateTimeOrder(gerarOrderEntity().getDateTimeOrder())
                 .customer(gerarCustomerRequestDTO())
                 .id(gerarOrderEntity().getId())
+                .products(List.of(gerarOrderProductResponseDTO()))
+                .build();
+    }
+
+    public static OrderProductResponseDTO gerarOrderProductResponseDTO() {
+        return OrderProductResponseDTO.builder()
+                .productId("teste")
+                .category("teste")
+                .price(new BigDecimal("10.0"))
+                .information("teste")
+                .name("teste")
                 .build();
     }
 }

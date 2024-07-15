@@ -5,7 +5,7 @@ import br.com.kenzley.fiap.service.order.api.request.OrderRequestDTO;
 import br.com.kenzley.fiap.service.order.business.OrderService;
 import br.com.kenzley.fiap.service.order.infrastructure.entity.OrderEntity;
 import br.com.kenzley.fiap.service.order.infrastructure.exceptions.Handler.GlobalExceptionHandler;
-import br.com.kenzley.fiap.service.order.infrastructure.exceptions.OrderNotFoundException;
+import br.com.kenzley.fiap.service.order.infrastructure.exceptions.NotFoundException;
 import br.com.kenzley.fiap.service.order.infrastructure.repository.OrderRepository;
 import br.com.kenzley.fiap.service.order.utils.OrderHelper;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -123,7 +123,7 @@ class OrderControllerTest {
             var order = OrderHelper.gerarOrderRequestDTO();
 
             when(orderService.getOrderById(350L))
-                    .thenThrow(new OrderNotFoundException("Order not Found"));
+                    .thenThrow(new NotFoundException("Order not Found"));
 
             mockMvc.perform(get("/orders/{id}", 350L)
                             .contentType(MediaType.APPLICATION_JSON)

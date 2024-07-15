@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 @EqualsAndHashCode
 public class PaymentOrderDTO {
     private Long id;
-    private Long orderId;
     private String status;
     private BigDecimal amount;
 }

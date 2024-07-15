@@ -10,25 +10,40 @@
 	</parent>
 	<groupId>br.com.kenzley.fiap.service</groupId>
 	<artifactId>order</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>order</name>
 	<description>Serviço responsável por operacionalizar o processo de pedidos, registrando os pedidos, retornando as informações necessárias para montar um pedido, listando os pedidos registrados e em processo de produção</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
 	<properties>
 		<java.version>17</java.version>
 		<spring-cloud.version>2023.0.2</spring-cloud.version>
+		<jacoco.version>0.8.12</jacoco.version>
+		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+		<sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+		<sonar.language>java</sonar.language>
+		<sonar.coverage.exclusions>
+			**/*DTO.java,
+			**/*Entity.java,
+			**/api/**/Mapper*.java,
+			**/infrastructure/**/*Handler.java,
+			**/infrastructure/**/*Exception.java,
+			**/client/**/DTO*.java,
+			**/infrastructure/entity/*.java,
+			**/infrastructure/exceptions/**/*.*,
+			**/enums/**/*.java
+		</sonar.coverage.exclusions>
+		<sonar.exclusions>
+			**/*DTO.java,
+			**/*Entity.java,
+			**/api/**/Mapper*.java,
+			**/infrastructure/**/*Handler.java,
+			**/infrastructure/**/*Exception.java,
+			**/client/**/DTO*.java,
+			**/infrastructure/entity/*.java,
+			**/infrastructure/exceptions/Handler/*.java,
+			**/enums/**/*.java
+		</sonar.exclusions>
+
 	</properties>
 	<dependencies>
 		<dependency>
@@ -228,6 +243,20 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- sonar -->
+
+		<dependency>
+			<groupId>org.jacoco</groupId>
+			<artifactId>jacoco-maven-plugin</artifactId>
+			<version>${jacoco.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>plexus-utils</artifactId>
+					<groupId>org.codehaus.plexus</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
@@ -277,10 +306,64 @@
 		</pluginManagement>
 
 		<plugins>
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco.version}</version>
+				<executions>
+					<execution>
+						<id>prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+<!--			<plugin>-->
+<!--				<groupId>org.sonarsource.scanner.maven</groupId>-->
+<!--				<artifactId>sonar-maven-plugin</artifactId>-->
+<!--				<version>4.0.0.4121</version>-->
+<!--			</plugin>-->
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+
+<!--			<plugin>-->
+<!--				<groupId>org.jacoco</groupId>-->
+<!--				<artifactId>jacoco-maven-plugin</artifactId>-->
+<!--				<version>${jacoco.version}</version>-->
+<!--				<configuration>-->
+<!--					<output>file</output>-->
+<!--					<append>true</append>-->
+<!--				</configuration>-->
+<!--				<executions>-->
+<!--					<execution>-->
+<!--						<id>default-prepare-agent</id>-->
+<!--						<goals>-->
+<!--							<goal>prepare-agent</goal>-->
+<!--						</goals>-->
+<!--					</execution>-->
+<!--					<execution>-->
+<!--						<id>jacoco-report</id>-->
+<!--						<phase>test</phase>-->
+<!--						<goals>-->
+<!--							<goal>report</goal>-->
+<!--						</goals>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--			</plugin>-->
 		</plugins>
 	</build>
 
