@@ -5,9 +5,11 @@ import br.com.kenzley.fiap.service.order.api.request.OrderRequestDTO;
 import br.com.kenzley.fiap.service.order.api.response.OrderResponseDTO;
 import br.com.kenzley.fiap.service.order.client.product.Product;
 import br.com.kenzley.fiap.service.order.client.product.ProductClient;
+import br.com.kenzley.fiap.service.order.enums.OrderStatus;
 import br.com.kenzley.fiap.service.order.infrastructure.entity.OrderEntity;
 import br.com.kenzley.fiap.service.order.infrastructure.entity.OrderProductEntity;
-import br.com.kenzley.fiap.service.order.infrastructure.exceptions.OrderNotFoundException;
+import br.com.kenzley.fiap.service.order.infrastructure.entity.PaymentOrderEntity;
+import br.com.kenzley.fiap.service.order.infrastructure.exceptions.NotFoundException;
 import br.com.kenzley.fiap.service.order.infrastructure.repository.OrderRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +19,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -54,28 +56,58 @@ public class OrderService {
         order.setProducts(orderProducts);
         order.setTotalAmount(totalAmount);
 
+        PaymentOrderEntity payment = new PaymentOrderEntity();
+        payment.setStatus("PENDING");
+        payment.setAmount(totalAmount);
+
+        order.setPayment(payment);
+        order.setOrderStatus(OrderStatus.RECEIVED);
+
         var savedOrder = orderRepository.save(order);
-
-//        PaymentOrderEntity payment = new PaymentOrderEntity();
-//        payment.setOrderId(savedOrder.getId());
-//        payment.setStatus("PENDING");
-//        payment.setAmount(totalAmount);
-//
-//        paymentClient.createPayment(payment);
-//
-//        savedOrder.setPayment(payment);
-
         return orderMapper.orderEntityToOrderResponse(savedOrder);
     }
 
     public OrderResponseDTO getOrderById(Long id) {
-        var order = orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException("Order not found"));
+        var order = orderRepository.findById(id).orElseThrow(() -> new NotFoundException("Order not found"));
         return orderMapper.orderEntityToOrderResponse(order);
     }
 
     public List<OrderResponseDTO> getAllOrders() {
         List<OrderEntity> orders = orderRepository.findAll();
         return orders.stream()
+                .map(orderMapper::orderEntityToOrderResponse)
+                .toList();
+    }
+
+    public void updateStatusPaymentByOrderId(Long id, String statusPayment) {
+        getOrderById(id);
+
+        Optional<OrderEntity> order = orderRepository.findById(id);
+        order.ifPresent(o -> {
+            o.getPayment().setStatus(statusPayment);
+            orderRepository.save(o);
+        } );
+    }
+
+    public List<OrderResponseDTO> findOrdersByStatusReceivedOrReady() {
+        var byOrderStatus = orderRepository.findByOrderStatus(OrderStatus.RECEIVED, OrderStatus.READY);
+        return byOrderStatus.stream()
+                .map(orderMapper::orderEntityToOrderResponse)
+                .toList();
+    }
+
+    public void updateOrder(Long id, String statusOrder) {
+        getOrderById(id);
+        var order = orderRepository.findById(id);
+        order.ifPresent(o -> {
+                         o.setOrderStatus(OrderStatus.fromString(statusOrder));
+                        orderRepository.save(o);
+        });
+    }
+
+    public List<OrderResponseDTO> findByOrderStatus(OrderStatus orderStatus) {
+        var order = orderRepository.findByOrderStatus(orderStatus);
+        return order.stream()
                 .map(orderMapper::orderEntityToOrderResponse)
                 .toList();
     }

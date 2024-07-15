@@ -2,7 +2,7 @@ package br.com.kenzley.fiap.service.order.infrastructure.exceptions.Handler;
 
 import br.com.kenzley.fiap.service.order.infrastructure.exceptions.BusinessException;
 import br.com.kenzley.fiap.service.order.infrastructure.exceptions.ExceptionDTO;
-import br.com.kenzley.fiap.service.order.infrastructure.exceptions.OrderNotFoundException;
+import br.com.kenzley.fiap.service.order.infrastructure.exceptions.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,9 +26,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exDTO);
     }
 
-    @ExceptionHandler(OrderNotFoundException.class)
+    @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ExceptionDTO> handleProductNotFoundException(OrderNotFoundException ex) {
+    public ResponseEntity<ExceptionDTO> handleProductNotFoundException(NotFoundException ex) {
 
         var exDTO = ExceptionDTO.builder()
                 .error(ex.getMessage())

@@ -4,6 +4,7 @@ import br.com.kenzley.fiap.service.order.api.request.CustomerRequestDTO;
 import br.com.kenzley.fiap.service.order.api.request.OrderProductRequestDTO;
 import br.com.kenzley.fiap.service.order.api.request.PaymentOrderDTO;
 import br.com.kenzley.fiap.service.order.client.product.OrderProductResponseDTO;
+import br.com.kenzley.fiap.service.order.enums.OrderStatus;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -24,4 +25,5 @@ public class OrderResponseDTO {
     private LocalDateTime dateTimeOrder;
     private PaymentOrderDTO payment;
     private BigDecimal totalAmount;
+    private OrderStatus orderStatus;
 }

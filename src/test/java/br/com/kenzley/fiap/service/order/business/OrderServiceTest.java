@@ -3,9 +3,11 @@ package br.com.kenzley.fiap.service.order.business;
 import br.com.kenzley.fiap.service.order.api.converter.OrderMapper;
 import br.com.kenzley.fiap.service.order.api.response.OrderResponseDTO;
 import br.com.kenzley.fiap.service.order.client.product.ProductClient;
+import br.com.kenzley.fiap.service.order.enums.OrderStatus;
 import br.com.kenzley.fiap.service.order.infrastructure.entity.OrderEntity;
-import br.com.kenzley.fiap.service.order.infrastructure.exceptions.OrderNotFoundException;
+import br.com.kenzley.fiap.service.order.infrastructure.exceptions.NotFoundException;
 import br.com.kenzley.fiap.service.order.infrastructure.repository.OrderRepository;
+import br.com.kenzley.fiap.service.order.infrastructure.repository.PaymentOrderRepository;
 import br.com.kenzley.fiap.service.order.utils.OrderHelper;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
@@ -37,6 +39,8 @@ class OrderServiceTest {
     private OrderRepository orderRepository;
     @Mock
     private OrderMapper orderMapper;
+    @Mock
+    private PaymentOrderRepository paymentOrderRepository;
     private OrderService orderService;
     AutoCloseable mock;
 
@@ -75,7 +79,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void mustAllowFindOrder() throws OrderNotFoundException {
+    void mustAllowFindOrder() throws NotFoundException {
         // Arrange
         var orderEntity = OrderHelper.gerarOrderEntity();
         when(orderRepository.findById(any(Long.class))).thenReturn(Optional.of((orderEntity)));
@@ -91,12 +95,74 @@ class OrderServiceTest {
     }
 
     @Test
+    void mustAllowFindOrdersByStatusReceivedOrReady() throws NotFoundException {
+        // Arrange
+        var orderEntity = OrderHelper.gerarOrderEntity();
+        when(orderRepository.findByOrderStatus(OrderStatus.RECEIVED, OrderStatus.READY)).thenReturn(List.of(orderEntity));
+        when(orderMapper.orderEntityToOrderResponse(any(OrderEntity.class))).thenReturn(OrderHelper.gerarOrderResponse());
+
+        // Act
+        var orderReceived = orderService.findOrdersByStatusReceivedOrReady();
+
+        // Assert
+        Assertions.assertThat(orderReceived).isNotNull();
+        verify(orderRepository, times(1)).findByOrderStatus(OrderStatus.RECEIVED, OrderStatus.READY);
+
+    }
+
+    @Test
+    void mustAllowUpdateStatusPaymentByOrderId() throws NotFoundException {
+        // Arrange
+        var orderEntity = OrderHelper.gerarOrderEntity();
+        when(orderRepository.findById(any(Long.class))).thenReturn(Optional.of((orderEntity)));
+        when(orderMapper.orderEntityToOrderResponse(any(OrderEntity.class))).thenReturn(OrderHelper.gerarOrderResponse());
+
+        // Act
+         orderService.updateStatusPaymentByOrderId(1L, "Approved");
+
+        // Assert
+        verify(orderRepository, times(1)).save(any(OrderEntity.class));
+
+    }
+
+    @Test
+    void mustAllowUpdateOrder() throws NotFoundException {
+        // Arrange
+        var orderEntity = OrderHelper.gerarOrderEntity();
+        when(orderRepository.findById(any(Long.class))).thenReturn(Optional.of((orderEntity)));
+        when(orderMapper.orderEntityToOrderResponse(any(OrderEntity.class))).thenReturn(OrderHelper.gerarOrderResponse());
+
+        // Act
+        orderService.updateOrder(1L, OrderStatus.FINISHED.toString());
+
+        // Assert
+        verify(orderRepository, times(1)).save(any(OrderEntity.class));
+    }
+
+    @Test
+    void mustAllowFindByOrderStatus() throws NotFoundException {
+        // Arrange
+        var orderEntity = OrderHelper.gerarOrderEntity();
+        when(orderRepository.findByOrderStatus(OrderStatus.RECEIVED)).thenReturn(List.of((orderEntity)));
+        when(orderMapper.orderEntityToOrderResponse(any(OrderEntity.class))).thenReturn(OrderHelper.gerarOrderResponse());
+
+        // Act
+        List<OrderResponseDTO> orderReceived = orderService.findByOrderStatus(OrderStatus.RECEIVED);
+
+        // Assert
+        Assertions.assertThat(orderReceived).isNotNull();
+        verify(orderRepository, times(1)).findByOrderStatus(any(OrderStatus.class));
+    }
+
+
+
+    @Test
     void mustGenerateExceptionWhenIdDoesNotExist() {
 
         when(orderRepository.findById(10L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> orderService.getOrderById(10L))
-                .isInstanceOf(OrderNotFoundException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessage("Order not found");
 
         verify(orderRepository, times(1)).findById(10L);
