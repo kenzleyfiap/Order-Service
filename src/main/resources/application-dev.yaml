@@ -15,7 +15,7 @@ spring:
     name: ORDER-SERVICE
 
 server:
-  port: 8081
+  port: 8082
 
 mapstruct:
   defaultComponentModel=spring:
