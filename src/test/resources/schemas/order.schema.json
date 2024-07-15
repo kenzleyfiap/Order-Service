@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "customer": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "cpf": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "cpf"
+      ]
+    },
+    "products": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "productId": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "price": {
+              "type": "number"
+            },
+            "information": {
+              "type": "string"
+            },
+            "category": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "productId",
+            "name",
+            "price",
+            "information",
+            "category"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "productId": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "price": {
+              "type": "number"
+            },
+            "information": {
+              "type": "string"
+            },
+            "category": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "productId",
+            "name",
+            "price",
+            "information",
+            "category"
+          ]
+        }
+      ]
+    },
+    "dateTimeOrder": {
+      "type": "string"
+    },
+    "payment": {
+      "type": "null"
+    },
+    "totalAmount": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "customer",
+    "products",
+    "dateTimeOrder",
+    "payment",
+    "totalAmount"
+  ]
+}
