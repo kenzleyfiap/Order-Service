@@ -5,7 +5,7 @@ Serviço responsável por operacionalizar o processo de pedidos, registrando os 
 <img src="assets/fiap_services.drawio.png" width="400" height="500">
 
 ### Evidência sonar
-<img src="assets/sonar.PNG">
+<img src="assets/sonar.png">
 
 ## Comandos para rodar os testes
 
