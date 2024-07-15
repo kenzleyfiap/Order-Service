@@ -39,11 +39,11 @@ jobs:
               run: docker pull luankenzley/order-service:latest
             - name: Run docker container
               run: |
-                docker run -d -p 8081:8081 \
-                -e DB_HOST=${{secrets.DB_HOST}} \
-                -e DB_USERNAME=${{secrets.DB_USERNAME}} \
-                -e DB_PASSWORD=${{secrets.DB_PASSWORD}} \
-                -e HOST_PRODUCT_SERVICE=${{secrets.HOST_PRODUCT_SERVICE}} \
-                -e HOST_PAYMENT=${{secrets.HOST_PAYMENT}}
-                --name deploy_order-service \
-                luankenzley/order-service
+                docker run -d -p 8080:8080 \
+                  -e DB_HOST="${{ secrets.DB_HOST }}" \
+                  -e DB_USERNAME="${{ secrets.DB_USERNAME }}" \
+                  -e DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
+                  -e HOST_PRODUCT_SERVICE="${{ secrets.HOST_PRODUCT_SERVICE }}" \
+                  -e HOST_PAYMENT="${{ secrets.HOST_PAYMENT }}" \
+                  --name deploy_order-service \
+                  luankenzley/order-service
