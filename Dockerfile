@@ -3,5 +3,5 @@ WORKDIR /app
 
 COPY target/order-1.0.0.jar order-1.0.0.jar
 
-EXPOSE 8081
+EXPOSE 8082
 CMD ["java","-jar","product-1.0.0.jar"]
