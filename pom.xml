@@ -418,6 +418,16 @@
 				</pluginManagement>
 			</build>
 		</profile>
+
+		<profile>
+			<id>dev</id>
+			<properties>
+				<activatedProperties>dev</activatedProperties>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
 	</profiles>
 
 </project>
